@@ -1,104 +1,40 @@
+/* AudioContext singleton via window.getAudioContext() */
+(function(window) {
+  if (typeof window.AudioContext === 'undefined') {
+    if (typeof webkitAudioContext !== 'undefined') 
+      AudioContext = webkitAudioContext }
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  var audioContext
 
-var ctx,
-    c_ctx,
-    canvas,
-    analyser,
-    main_gain,
-    uint8_array;
+  window.getAudioContext = function() {
+    if (!audioContext) {
 
-function init() {
-  ctx = new AudioContext();
+      audioContext = new AudioContext() }
 
-  main_gain = ctx.createGain();
-  main_gain.gain.value = 1.0;
+    return audioContext} })(window)
 
-  analyser = ctx.createAnalyser();
-  analyser.connect(main_gain);
 
-  uint8_array = new Uint8Array(analyser.frequencyBinCount);
+var audioContext = getAudioContext()
+  console.log(audioContext)
 
-  initCanvas();
-  render();
-}
 
-function initCanvas() {
-  canvas = document.getElementById('canvas');
-  c_ctx = canvas.getContext('2d');
+var HackerTracker = {
+  sounds : {
+    SimpleOscillator : SimpleOscillator(audioContext) } }
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
 
-  var gradient = c_ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0.0, '#00ff00');
-  gradient.addColorStop(0.35, '#ffff00');
-  gradient.addColorStop(0.75, '#ff0000');
-  gradient.addColorStop(1.0, '#000000');
+var oscSound = new HackerTracker.sounds.SimpleOscillator(audioContext)
 
-  c_ctx.fillStyle = gradient;
-}
+oscSound.destinations.push(getAudioContext().destination)
 
-function render() {
-  var ctx = c_ctx;
+oscSound.play()
 
-  analyser.getByteFrequencyData(uint8_array);
+/*
+  var main_gain
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  var deltaX = canvas.width / analyser.frequencyBinCount;
-  var w = deltaX * 0.7;
-
-  // For each data in array
-  for(var data_n = 0, data_len = uint8_array.length; data_n < data_len; ++data_n){
-    var data = uint8_array[data_n];
-
-    ctx.fillRect(data_n*deltaX, 0, w, data);
+  function init() {
+    main_gain = sound.audioContext.createGain();
+    main_gain.gain.value = 1.0;
+    main_gain.connect(sound.audioContext.destination)
   }
-
-  window.requestAnimationFrame(render);
-}
-
-function playNote(freq, dur, type) {
-  var osc = ctx.createOscillator();
-  osc.frequency.value = freq || 440;
-  osc.type = type || 'sine';
-
-  dur = dur || 1;
-
-  var n = fadeInNode(dur/2),
-      m = fadeOutNode(dur/2,dur/2);
-
-  osc.connect(n);
-  n.connect(m);
-  m.connect(main_gain);
-
-  osc.start(ctx.currentTime);
-  osc.stop(ctx.currentTime + dur);
-}
-
-function fadeInNode(time) {
-  var n = ctx.createGain(),
-      t = ctx.currentTime;
-
-  n.gain.linearRampToValueAtTime(0, t);
-  n.gain.linearRampToValueAtTime(1, t+(time || 1));
-
-  return n;
-}
-function fadeOutNode(start, dur) {
-  var n = ctx.createGain(),
-      t = ctx.currentTime;
-
-  start = start || 1;
-
-  n.gain.linearRampToValueAtTime(1, t+start);
-  n.gain.linearRampToValueAtTime(0, t+start+(dur || 1));
-
-  return n;
-}
-
-
-init();
-
-playNote();
+  */
