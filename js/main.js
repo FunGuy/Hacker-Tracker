@@ -13,6 +13,7 @@ function init() {
 
   main_gain = ctx.createGain();
   main_gain.gain.value = 1.0;
+  main_gain.connect(ctx.destination);
 
   analyser = ctx.createAnalyser();
   analyser.connect(main_gain);
@@ -42,15 +43,16 @@ function initCanvas() {
 function render() {
   var ctx = c_ctx;
 
-  analyser.getByteFrequencyData(uint8_array);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  analyser.getByteFrequencyData(uint8_array);
 
   var deltaX = canvas.width / analyser.frequencyBinCount;
   var w = deltaX * 0.7;
 
   // For each data in array
-  for(var data_n = 0, data_len = uint8_array.length; data_n < data_len; ++data_n){
+  for(var data_n = 0, data_len = uint8_array.length; data_n < data_len; ++data_n) {
     var data = uint8_array[data_n];
 
     ctx.fillRect(data_n*deltaX, 0, w, data);
