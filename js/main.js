@@ -50,7 +50,7 @@ var HackerTracker = {
       $cells = $elem.find('.cell');
 
 
-  GUI.setController(pattern);
+  // GUI.setController(pattern);
   
 
   var freqs = [ 262, 294, 330, 350, 392, 440, 494, 523 ].reverse();
@@ -80,7 +80,7 @@ var HackerTracker = {
   });
 
 
-  pattern.on('columnchange', function(data) {
+  pattern.on('play:column', function(data) {
     $cells.removeClass('playing');
     $elem.find('.cell[data-col="'+(data.columnNumber+1)+'"]').addClass('playing');
   });

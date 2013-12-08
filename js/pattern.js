@@ -36,6 +36,17 @@ var Pattern = (function() {
     this.playingCol = -1;
   };
 
+  Pattern.prototype.clearGrid = function() {
+    for (var row = 0; row < this.numRows; row++) {
+      this.grid[row] = new Array(this.numCols);
+
+      for (var col = 0; col < this.numCols; col++) {
+        // Set default to null
+        this.grid[row][col] = null;
+      }
+    }
+  };
+
   Pattern.prototype.play = function() {
     this.interval = setInterval(this.nextColumn, this.playingDelay);
     this.trigger('play');
@@ -86,8 +97,8 @@ var Pattern = (function() {
     if(!this.isPositionValid(row, col)) {
       return false;
     }
-
     this.grid[row][col] = null;
+
     this.trigger('sound:remove', {
       row: row,
       col: col
