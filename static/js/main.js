@@ -132,3 +132,50 @@ var HackerTracker = {
     main_gain.connect(sound.audioContext.destination)
   }
   */
+
+
+// ajaj - asynchronous javascript and jason
+// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest?redirectlocale=en-US&redirectslug=DOM%2FXMLHttpRequest
+// 0  UNSENT  open()has not been called yet.
+// 1  OPENED  send()has not been called yet.
+// 2  HEADERS_RECEIVED  send() has been called, and headers and status are
+// available.
+// 3  LOADING Downloading; responseText holds partial data.
+// 4  DONE  The operation is complete.
+function ajaj(cfg) {
+  var xhr = new XMLHttpRequest()
+  xhr.onreadystatechange = function() {
+    console.log('xhr state changed', this, arguments)
+    if (this.readyState === this.LOADING)
+      cfg.loading(xhr)
+    else if (this.readyState === this.DONE)
+      cfg.done(xhr) }
+
+  xhr.open(cfg.method || "GET", cfg.url)
+  console.log('my xhr', xhr)
+  xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.send(JSON.stringify(cfg.data || {} )) }
+
+
+
+var listenToThatChangeFeedAiiiit = function() {
+  ajaj( {
+    method : 'GOT',
+    //url : 'http://relax.zarac.se/hacker-tracker/_changes?feed=continuous',
+    url : 'http://192.168.0.19:5984/hacker-tracker/_changes?feed=continuous',
+    loading : function(xhr) {
+      console.log('loading...', xhr) },
+    done : function(xhr) {
+      console.log('done...', xhr) } } ) }
+
+// document / DOM states (or whatever)
+// default dummy functions defined here, meant to be overridden
+// https://developer.mozilla.org/docs/Web/API/document.readyState
+document.onreadystatechange = function(e) {
+  console.log('state changed yeahh', document.readyState);
+  ({ loading : function() {},
+    interactive : function() { console.log('interactiv000z') },
+
+    complete : function() {
+      listenToThatChangeFeedAiiiit()
+      console.log('completed loading DOM') } })[document.readyState](e) }
