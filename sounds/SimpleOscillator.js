@@ -5,33 +5,36 @@
 var SimpleOscillator = (function(audioContext) {
   // what we'll return
   var SimpleOscillator = function() {
-    this.destinations = []
-  }
+    this.destinations = [];
+  };
 
   SimpleOscillator.prototype = {
-    duration : 1, // ??
+    duration : 1,
     playBuffer : undefined,
     outputNode : undefined,
     play : undefined,
     type : 'sine',
-    frequencey : 440 }
+    frequencey : 440
+  };
 
   SimpleOscillator.prototype.connect = function(node) {
-    this.outputNode.connect(node) }
+    this.outputNode.connect(node);
+  };
 
   SimpleOscillator.prototype.play = function() {
-    var osc = this.createOscillator()
+    var osc = this.createOscillator();
 
     for (var i = 0 ; i < this.destinations.length ; i++)
-      this.outputNode.connect(this.destinations[i])
+      this.outputNode.connect(this.destinations[i]);
     
-    this.playNote(osc) }
+    this.playNote(osc);
+  };
 
-  // ..
+
   SimpleOscillator.prototype.createOscillator = function() {
     var osc = audioContext.createOscillator();
     osc.frequency.value = this.frequency;
-    osc.type = this.type
+    osc.type = this.type;
 
     var n = fadeInNode(this.duration / 2),
         m = fadeOutNode(this.duration / 2, this.duration / 2);
@@ -39,18 +42,20 @@ var SimpleOscillator = (function(audioContext) {
     osc.connect(n);
     n.connect(m);
 
-    this.outputNode = m
+    this.outputNode = m;
 
-    return osc }
+    return osc;
+  };
 
   SimpleOscillator.prototype.playNote = function(osc) {
     osc.start(audioContext.currentTime);
-    osc.stop(audioContext.currentTime + this.duration); }
+    osc.stop(audioContext.currentTime + this.duration);
+  };
 
 
   // helperz
   function fadeInNode(duration) {
-    if (!duration) duration = 1
+    duration = duration || 1;
 
     var n = audioContext.createGain(),
         t = audioContext.currentTime;
@@ -62,7 +67,7 @@ var SimpleOscillator = (function(audioContext) {
   }
 
   function fadeOutNode(start, duration) {
-    duration = duration || 1
+    duration = duration || 1;
     start = start || 1;
 
     var n = audioContext.createGain(),
@@ -74,4 +79,5 @@ var SimpleOscillator = (function(audioContext) {
     return n;
   }
 
-  return SimpleOscillator } )
+  return SimpleOscillator;
+});

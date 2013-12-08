@@ -2,3 +2,60 @@ body {
   margin:0;
   overflow: hidden;
 }
+
+#pattern_container {
+  text-align: center;
+  width: 100%;
+}
+
+.cell {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  line-height: 4.0;
+  border: solid 1px black;
+  margin: 5px;
+
+  color: #333;
+  text-shadow: 1px 1px 5px rgba(100, 100, 100, 0.8);
+
+  -webkit-transition: background-color 0.5s ease;
+}
+
+.row[data-row] .cell:hover {
+  background-color: #CCC;
+}
+.row[data-row] .cell:active {
+  background-color: #AAA;
+}
+
+.row[data-row] .cell.occupied {
+  background-color: #6DFF57;
+  font-weight: bold;
+}
+.row[data-row] .cell.playing {
+  background-color: #E8C56D;
+}
+.row[data-row] .cell.occupied.playing {
+  background-color: #E86A52;
+}
+
+.row[data-row='1'] .cell { background-color: rgb(250,250,250); }
+.row[data-row='2'] .cell { background-color: rgb(245,245,245); }
+.row[data-row='3'] .cell { background-color: rgb(240,240,240); }
+.row[data-row='4'] .cell { background-color: rgb(235,235,235); }
+.row[data-row='5'] .cell { background-color: rgb(230,230,230); }
+.row[data-row='6'] .cell { background-color: rgb(225,225,225); }
+.row[data-row='7'] .cell { background-color: rgb(220,220,220); }
+.row[data-row='8'] .cell { background-color: rgb(215,215,215); }
+
+
+.row[data-row='1'] .cell.occupied { background-color: rgb(109,255,87); }
+.row[data-row='2'] .cell.occupied { background-color: rgb(104,250,82); }
+.row[data-row='3'] .cell.occupied { background-color: rgb(99,245,77); }
+.row[data-row='4'] .cell.occupied { background-color: rgb(94,240,72); }
+.row[data-row='5'] .cell.occupied { background-color: rgb(89,235,67); }
+.row[data-row='6'] .cell.occupied { background-color: rgb(84,230,62); }
+.row[data-row='7'] .cell.occupied { background-color: rgb(79,225,57); }
+.row[data-row='8'] .cell.occupied { background-color: rgb(74,220,52); }
