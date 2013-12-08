@@ -14,7 +14,8 @@ var SimpleOscillator = (function(audioContext) {
     outputNode : undefined,
     play : undefined,
     type : 'sine',
-    frequencey : 440
+    frequency : 440,
+    color: 0x2E0145
   };
 
   SimpleOscillator.prototype.connect = function(node) {
@@ -52,6 +53,15 @@ var SimpleOscillator = (function(audioContext) {
     osc.stop(audioContext.currentTime + this.duration);
   };
 
+
+  SimpleOscillator.prototype.toJSON = function() {
+    return {
+      name: 'SimpleOscillator',
+      duration: this.duration,
+      type: this.type,
+      frequency: this.frequency
+    };
+  };
 
   // helperz
   function fadeInNode(duration) {

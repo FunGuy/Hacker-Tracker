@@ -27,7 +27,21 @@ var HackerTracker = {
   }
 };
 
-
+(function() {
+  if(!String.prototype.format){
+    Object.defineProperty(String.prototype, 'format', {
+      value: function(){
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number){
+          return (args[number] !== undefined)? args[number] : match;
+        });
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+  }
+}());
 
 
 (function() {
@@ -38,7 +52,7 @@ var HackerTracker = {
 
   
 
-  var freqs = [ 262, 294, 330, 350, 392, 440, 494, 523 ];
+  var freqs = [ 262, 294, 330, 350, 392, 440, 494, 523 ].reverse();
 
   $cells.click(function() {
     var $this = $(this),
@@ -47,7 +61,7 @@ var HackerTracker = {
 
     if(pattern.isPositionOccupied(row, col)) {
       // Clear cell
-      pattern.clearSoundAtPosition(row, col);
+      pattern.removeSoundAtPosition(row, col);
       $this.html('empty');
       $this.removeClass('occupied');
     }
@@ -71,6 +85,30 @@ var HackerTracker = {
   });
   pattern.on('stop', function(data) {
     $cells.removeClass('playing');
+  });
+
+  pattern.on('sound:add', function(data) {
+
+    // Post to DB
+    // var dbData = {
+    //   sound: data.sound.toJSON(),
+    //   row: data.row,
+    //   col: data.col
+    // };
+
+    // var patternName;
+
+    // Couch.send({
+    //   method: 'POST',
+    //   query: 'patterns/{0}/grid/row{1}/col{2}'.format(patternName, data.row, data.col)
+    // });
+
+  });
+  pattern.on('sound:remove', function(data) {
+
+    // Post to DB
+    
+
   });
 
 

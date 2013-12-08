@@ -61,7 +61,7 @@ var Pattern = (function() {
     this.playingCol = ++this.playingCol % this.numCols;
     this.playColumn();
     
-    this.trigger('columnchange', { columnNumber: this.playingCol });
+    this.trigger('play:column', { columnNumber: this.playingCol });
   };
 
 
@@ -75,13 +75,23 @@ var Pattern = (function() {
 
     sound.destinations.push(this.destination);
     this.grid[row][col] = sound;
+
+    this.trigger('sound:add', {
+      sound: sound,
+      row: row,
+      col: col
+    });
   };
-  Pattern.prototype.clearSoundAtPosition = function(row, col) {
+  Pattern.prototype.removeSoundAtPosition = function(row, col) {
     if(!this.isPositionValid(row, col)) {
       return false;
     }
 
     this.grid[row][col] = null;
+    this.trigger('sound:remove', {
+      row: row,
+      col: col
+    });
   };
   Pattern.prototype.isPositionValid = function(row, col) {
     return (row >= 0 && row < this.numRows && col >= 0 && col < this.numCols);
