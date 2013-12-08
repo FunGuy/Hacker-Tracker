@@ -255,7 +255,7 @@ var GUI = (function() {
 		/*Create the scene*/
 		scene = new THREE.Scene();
 		/*Set the Renderer to a Canvas Renderer and set it's size*/
-		renderer = new THREE.WebGLRenderer({antialias: true});
+		renderer = new THREE.CanvasRenderer({antialias: true});
 		renderer.setSize( window.innerWidth, window.innerHeight);
 		
 		/*set controls*/

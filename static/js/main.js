@@ -144,27 +144,59 @@ var HackerTracker = {
 // 4  DONE  The operation is complete.
 function ajaj(cfg) {
   var xhr = new XMLHttpRequest()
+  // TODO why won't it work with responseType set to e.g. document
+  //xhr.responseType = 'document'
+  //xhr.responseType = 'moz-chunked-arraybuffer'
+  //xhr.responseType = 'arraybuffer'
+  
   xhr.onreadystatechange = function() {
-    console.log('xhr state changed', this, arguments)
-    if (this.readyState === this.LOADING)
+    console.log('xhr state changed', this, arguments, this.readyState)
+    if (this.readyState === this.OPENED)
+      cfg.opened()
+    else if (this.readyState === this.HEADERS_RECEIVED)
+      cfg.headers(xhr)
+    else if (this.readyState === this.LOADING)
       cfg.loading(xhr)
     else if (this.readyState === this.DONE)
       cfg.done(xhr) }
 
-  xhr.open(cfg.method || "GET", cfg.url)
-  console.log('my xhr', xhr)
-  xhr.setRequestHeader('Content-Type', 'application/json')
-  xhr.send(JSON.stringify(cfg.data || {} )) }
+  xhr.onload = cfg.onload || function() { console.log('onload', arguments) }
+  xhr.onerror = cfg.onerror || function() { console.log('onerror', arguments) }
+  xhr.onprogress = cfg.onprogress || function() {
+    console.log('onprogress', arguments, xhr.responseText) }
+
+  xhr.open(cfg.method || "GET", cfg.url, true)
+  console.log('my xhr opened', xhr)
+  //xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.setRequestHeader('Content-Type', 'application/octet-stream')
+  console.log('my xhr headers set', xhr)
+  xhr.send()
+  console.log('my xhr sent', xhr)
+}
+  //xhr.send(JSON.stringify(cfg.data || {} )) }
 
 
 
 var listenToThatChangeFeedAiiiit = function() {
+  console.log('trying to listen aiit')
   ajaj( {
-    method : 'GOT',
+    method : 'GET',
     //url : 'http://relax.zarac.se/hacker-tracker/_changes?feed=continuous',
-    url : 'http://192.168.0.19:5984/hacker-tracker/_changes?feed=continuous',
+    url : 'http://relax.zarac.se/hacker-tracker/_changes?feed=continuous',
+    //url : 'http://192.168.0.19:5984/hacker-tracker/_changes?feed=continuous',
+    //
+    gotChunk : function(xhr) {
+      console.log('gotChunk !NI!') },
+
+    opened : function(xhr) {
+      console.log('state is opened') },
+
+    headers : function(xhr) {
+      console.log('state is headers received') },
+
     loading : function(xhr) {
       console.log('loading...', xhr) },
+
     done : function(xhr) {
       console.log('done...', xhr) } } ) }
 

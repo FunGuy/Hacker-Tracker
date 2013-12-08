@@ -1,4 +1,6 @@
 [
   { "from" : "",
-    "to" : "index.html" }
+    "to" : "index.html" },
+  { "from" : "blah",
+    "to" : "../../_utils" }
 ]
