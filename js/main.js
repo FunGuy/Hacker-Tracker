@@ -50,6 +50,7 @@ var HackerTracker = {
       $cells = $elem.find('.cell');
 
 
+  GUI.setController(pattern);
   
 
   var freqs = [ 262, 294, 330, 350, 392, 440, 494, 523 ].reverse();
