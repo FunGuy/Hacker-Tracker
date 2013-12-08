@@ -134,8 +134,13 @@ var HackerTracker = {
   */
 
 
-// ajaj - asynchronous javascript and jason
+// ajaj - asynchronous javascript and json
+//
+// http://www.w3.org/TR/XMLHttpRequest
 // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest?redirectlocale=en-US&redirectslug=DOM%2FXMLHttpRequest
+// http://stackoverflow.com/questions/3880381/xmlhttprequest-responsetext-while-loading-readystate-3-in-chrome
+// http://ajaxpatterns.org/HTTP_Streaming
+//
 // 0  UNSENT  open()has not been called yet.
 // 1  OPENED  send()has not been called yet.
 // 2  HEADERS_RECEIVED  send() has been called, and headers and status are
@@ -143,6 +148,10 @@ var HackerTracker = {
 // 3  LOADING Downloading; responseText holds partial data.
 // 4  DONE  The operation is complete.
 function ajaj(cfg) {
+  // output element
+  var el = document.createElement('section')
+  document.getElementsByTagName('body')[0].appendChild(el)
+
   var xhr = new XMLHttpRequest()
   // TODO why won't it work with responseType set to e.g. document
   //xhr.responseType = 'document'
@@ -163,12 +172,13 @@ function ajaj(cfg) {
   xhr.onload = cfg.onload || function() { console.log('onload', arguments) }
   xhr.onerror = cfg.onerror || function() { console.log('onerror', arguments) }
   xhr.onprogress = cfg.onprogress || function() {
-    console.log('onprogress', arguments, xhr.responseText) }
+    console.log('onprogress', arguments, xhr.responseText)
+    el.innerHTML = xhr.responseText }
 
   xhr.open(cfg.method || "GET", cfg.url, true)
   console.log('my xhr opened', xhr)
   //xhr.setRequestHeader('Content-Type', 'application/json')
-  xhr.setRequestHeader('Content-Type', 'application/octet-stream')
+  //xhr.setRequestHeader('Content-Type', 'application/octet-stream')
   console.log('my xhr headers set', xhr)
   xhr.send()
   console.log('my xhr sent', xhr)
@@ -182,7 +192,7 @@ var listenToThatChangeFeedAiiiit = function() {
   ajaj( {
     method : 'GET',
     //url : 'http://relax.zarac.se/hacker-tracker/_changes?feed=continuous',
-    url : 'http://relax.zarac.se/hacker-tracker/_changes?feed=continuous',
+    url : 'http://relax.zarac.se/hacker-tracker/_changes?feed=continuous&heartbeat=60000&limit=100',
     //url : 'http://192.168.0.19:5984/hacker-tracker/_changes?feed=continuous',
     //
     gotChunk : function(xhr) {
