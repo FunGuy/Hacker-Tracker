@@ -75,6 +75,7 @@ var Pattern = (function() {
 
     sound.destinations.push(this.destination);
     this.grid[row][col] = sound;
+    this.trigger('sound:add', {});
   };
   Pattern.prototype.clearSoundAtPosition = function(row, col) {
     if(!this.isPositionValid(row, col)) {
